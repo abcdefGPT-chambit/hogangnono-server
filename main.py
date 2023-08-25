@@ -38,3 +38,4 @@ for window_handle in driver.window_handles:
         break
 
 driver.find_element(By.CSS_SELECTOR, "#email").send_keys(config.EMAIL) # 이메일 입력
+driver.find_element(By.CSS_SELECTOR, "#pass").send_keys(config.PASSWORD) # 비밀번호 입력
