@@ -23,3 +23,5 @@ time.sleep(0.5)
 driver.find_element(By.CSS_SELECTOR, ".css-wyfpkg").click() # SMS 설치 팝업창 닫기
 time.sleep(0.5)
 
+driver.find_element(By.CSS_SELECTOR, ".btn-login").click() # 우측 상단 로그인 버튼 클릭
+time.sleep(0.5)
