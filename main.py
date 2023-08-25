@@ -61,3 +61,7 @@ driver.find_elements(By.CLASS_NAME, "label-container")[0].click() # 특정 아�
 time.sleep(0.5)
 
 driver.get(driver.current_url + "/2/review") # 특정 아파트의 후기 페이지로 이동
+
+html = driver.page_source
+
+soup = BeautifulSoup(html, "html.parser")
