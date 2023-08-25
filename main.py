@@ -30,3 +30,9 @@ driver.find_element(By.CSS_SELECTOR, ".css-0").click() # 페이스북 로그인 
 time.sleep(1)
 
 original_window = driver.window_handles[0] # 메인 창 저장
+
+# 페이스북 로그인 창으로 전환
+for window_handle in driver.window_handles:
+    driver.switch_to.window(window_handle)
+    if "Facebook" in driver.title:
+        break
