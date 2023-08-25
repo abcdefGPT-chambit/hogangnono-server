@@ -28,3 +28,5 @@ time.sleep(0.5)
 
 driver.find_element(By.CSS_SELECTOR, ".css-0").click() # 페이스북 로그인 버튼 클릭
 time.sleep(1)
+
+original_window = driver.window_handles[0] # 메인 창 저장
