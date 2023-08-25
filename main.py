@@ -19,3 +19,7 @@ driver = webdriver.Chrome(options=options)
 
 driver.get(config.HOGANGNONO_MAIN_URL)
 time.sleep(0.5)
+
+driver.find_element(By.CSS_SELECTOR, ".css-wyfpkg").click() # SMS 설치 팝업창 닫기
+time.sleep(0.5)
+
