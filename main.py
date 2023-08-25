@@ -25,3 +25,6 @@ time.sleep(0.5)
 
 driver.find_element(By.CSS_SELECTOR, ".btn-login").click() # 우측 상단 로그인 버튼 클릭
 time.sleep(0.5)
+
+driver.find_element(By.CSS_SELECTOR, ".css-0").click() # 페이스북 로그인 버튼 클릭
+time.sleep(1)
