@@ -7,3 +7,5 @@ from selenium.webdriver import ActionChains
 from selenium.common.exceptions import NoSuchWindowException
 import time
 import config
+
+user_agent = config.USER_AGENT
