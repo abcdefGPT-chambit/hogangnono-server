@@ -65,3 +65,11 @@ driver.get(driver.current_url + "/2/review") # 특정 아파트의 후기 페이
 html = driver.page_source
 
 soup = BeautifulSoup(html, "html.parser")
+
+reviews = soup.select(".css-0")
+print(reviews)
+# for review in reviews:
+#     text = review.select_one(".expand.css-1maot43.e1gnm0r1").text
+#
+#     print(text)
+#     print()
