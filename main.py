@@ -51,9 +51,10 @@ try:
 except NoSuchWindowException:
     pass
 
-time.sleep(1)
-
 driver.get(config.HOGANGNONO_MAIN_URL) # 메인 화면으로 이동을 통해 검색창 html 확보 셋팅
 time.sleep(0.5)
 
 driver.find_element(By.CLASS_NAME, "keyword").send_keys("반포동 반포자이", Keys.ENTER) # 특정 아파트 검색
+time.sleep(0.5)
+
+driver.find_elements(By.CLASS_NAME, "label-container")[0].click() # 특정 아파트 클릭
