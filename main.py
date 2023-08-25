@@ -70,3 +70,10 @@ soup = BeautifulSoup(html, "html.parser")
 
 reviews = soup.select(".css-5k4zdz.scroll-content > .css-0")
 
+for review in reviews:
+    text_elements = review.select(".css-dei5sc > .css-9uvvzn > .css-1maot43.e1gnm0r1")
+
+    for text_element in text_elements:
+        text = text_element.get_text(strip=True)
+        print(text)
+        print()
