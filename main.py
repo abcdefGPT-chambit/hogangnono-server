@@ -4,7 +4,7 @@ from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver import ActionChains
-from selenium.common.exceptions import NoSuchWindowException
+from selenium.common.exceptions import NoSuchWindowException, StaleElementReferenceException
 import time
 import config
 
@@ -64,14 +64,24 @@ time.sleep(0.5)
 
 driver.get(driver.current_url + "/2/review") # 특정 아파트의 후기 페이지로 이동
 time.sleep(1)
+
+for i in range(10):
+    try: # 더보기 버튼이 있으면 클릭
+        more_button = driver.find_element(By.CLASS_NAME, "css-wri049")
+        more_button.click()
+    except StaleElementReferenceException: # 더보기 버튼이 없으면 exception 발생. 따라서 스크롤 하도록 로직 구성
+        element = driver.find_element(By.CSS_SELECTOR, ".css-5k4zdz.scroll-content > .css-0")
+        driver.execute_script("arguments[0].scrollIntoView();", element)
+    time.sleep(0.5)
+
 html = driver.page_source
 
 soup = BeautifulSoup(html, "html.parser")
 
-reviews = soup.select(".css-5k4zdz.scroll-content > .css-0")
+reviews = soup.select(".css-5k4zdz.scroll-content > .css-0") # 리뷰 전체를 가지고 있는 가장 큰 class
 
 for review in reviews:
-    text_elements = review.select(".css-dei5sc > .css-9uvvzn > .css-1maot43.e1gnm0r1")
+    text_elements = review.select(".css-dei5sc > .css-9uvvzn > .css-1maot43.e1gnm0r1") # 리뷰 text가 담긴 class
 
     for text_element in text_elements:
         text = text_element.get_text(strip=True)
