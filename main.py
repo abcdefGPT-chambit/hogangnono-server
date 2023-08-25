@@ -9,3 +9,10 @@ import time
 import config
 
 user_agent = config.USER_AGENT
+
+options = Options()
+options.add_argument(f"user-agent={user_agent}")
+options.add_argument("--start-maximized")
+options.add_experimental_option("detach", True)
+
+driver = webdriver.Chrome(options=options)
