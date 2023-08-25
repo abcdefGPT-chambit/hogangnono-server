@@ -36,3 +36,5 @@ for window_handle in driver.window_handles:
     driver.switch_to.window(window_handle)
     if "Facebook" in driver.title:
         break
+
+driver.find_element(By.CSS_SELECTOR, "#email").send_keys(config.EMAIL) # 이메일 입력
