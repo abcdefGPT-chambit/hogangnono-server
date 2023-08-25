@@ -51,6 +51,8 @@ try:
 except NoSuchWindowException:
     pass
 
+time.sleep(1)
+
 driver.get(config.HOGANGNONO_MAIN_URL) # 메인 화면으로 이동을 통해 검색창 html 확보 셋팅
 time.sleep(0.5)
 
@@ -61,15 +63,10 @@ driver.find_elements(By.CLASS_NAME, "label-container")[0].click() # 특정 아�
 time.sleep(0.5)
 
 driver.get(driver.current_url + "/2/review") # 특정 아파트의 후기 페이지로 이동
-
+time.sleep(1)
 html = driver.page_source
 
 soup = BeautifulSoup(html, "html.parser")
 
-reviews = soup.select(".css-0")
-print(reviews)
-# for review in reviews:
-#     text = review.select_one(".expand.css-1maot43.e1gnm0r1").text
-#
-#     print(text)
-#     print()
+reviews = soup.select(".css-5k4zdz.scroll-content > .css-0")
+
