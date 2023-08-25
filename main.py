@@ -16,3 +16,6 @@ options.add_argument("--start-maximized")
 options.add_experimental_option("detach", True)
 
 driver = webdriver.Chrome(options=options)
+
+driver.get(config.HOGANGNONO_MAIN_URL)
+time.sleep(0.5)
