@@ -3,7 +3,7 @@ from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
-from selenium.common.exceptions import NoSuchWindowException, StaleElementReferenceException
+from selenium.common.exceptions import NoSuchWindowException, StaleElementReferenceException, NoSuchElementException
 import time
 import config
 import json
@@ -53,7 +53,7 @@ def login_hogangnono(driver):
     except NoSuchWindowException:
         pass
 
-    # time.sleep(1)
+    time.sleep(0.5)
     driver.get(config.HOGANGNONO_MAIN_URL)  # 메인 화면으로 이동을 통해 검색창 html 확보 셋팅
     time.sleep(0.5)
 
@@ -74,10 +74,10 @@ def crawling_review(driver):
         try:  # 더보기 버튼이 있으면 클릭
             more_button = driver.find_element(By.CLASS_NAME, "css-wri049")
             more_button.click()
-        except StaleElementReferenceException:  # 더보기 버튼이 없으면 exception 발생. 따라서 스크롤 하도록 로직 구성
+        except StaleElementReferenceException or NoSuchElementException:  # 더보기 버튼이 없으면 exception 발생. 따라서 스크롤 하도록 로직 구성
             element = driver.find_element(By.CSS_SELECTOR, ".css-5k4zdz.scroll-content > .css-0")
             driver.execute_script("arguments[0].scrollIntoView();", element)
-        time.sleep(1)
+        time.sleep(0.5)
 
     html = driver.page_source
 
@@ -93,10 +93,4 @@ def crawling_review(driver):
             review_list.append({"review" : text})
 
     review_json = json.dumps(review_list, ensure_ascii=False, indent=4)
-    print(review_json)
-
-if __name__ == "__main__":
-    driver = initialize_driver()
-    login_hogangnono(driver)
-    search_apartment_review(driver, "반포동 반포자이")
-    crawling_review(driver)
+    return review_json
