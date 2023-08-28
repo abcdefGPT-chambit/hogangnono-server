@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/hogangnono-web-crawling.iml" filepath="$PROJECT_DIR$/.idea/hogangnono-web-crawling.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/hogangnono-crawling-server.iml" filepath="$PROJECT_DIR$/.idea/hogangnono-crawling-server.iml" />
     </modules>
   </component>
 </project>
