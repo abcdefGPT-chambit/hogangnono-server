@@ -6,6 +6,7 @@ from selenium.webdriver.common.keys import Keys
 from selenium.common.exceptions import NoSuchWindowException, StaleElementReferenceException
 import time
 import config
+import json
 
 def initialize_driver():
     user_agent = config.USER_AGENT
@@ -67,6 +68,8 @@ def search_apartment_review(driver, apartment):
     time.sleep(1)
 
 def crawling_review(driver):
+    review_list = []
+
     for i in range(10):
         try:  # 더보기 버튼이 있으면 클릭
             more_button = driver.find_element(By.CLASS_NAME, "css-wri049")
@@ -87,8 +90,10 @@ def crawling_review(driver):
 
         for text_element in text_elements:
             text = text_element.get_text(strip=True)
-            print(text)
-            print()
+            review_list.append({"review" : text})
+
+    review_json = json.dumps(review_list, ensure_ascii=False, indent=4)
+    print(review_json)
 
 if __name__ == "__main__":
     driver = initialize_driver()
