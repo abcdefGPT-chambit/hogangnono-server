@@ -18,44 +18,49 @@ def initialize_driver():
 
     return webdriver.Chrome(options=options)
 
-driver.get(config.HOGANGNONO_MAIN_URL)
-time.sleep(0.5)
+def login_hogangnono(driver):
+    driver.get(config.HOGANGNONO_MAIN_URL)
+    time.sleep(0.5)
 
-driver.find_element(By.CSS_SELECTOR, ".css-wyfpkg").click() # SMS 설치 팝업창 닫기
-time.sleep(0.5)
+    driver.find_element(By.CSS_SELECTOR, ".css-wyfpkg").click()  # SMS 설치 팝업창 닫기
+    time.sleep(0.5)
 
-driver.find_element(By.CSS_SELECTOR, ".btn-login").click() # 우측 상단 로그인 버튼 클릭
-time.sleep(0.5)
+    driver.find_element(By.CSS_SELECTOR, ".btn-login").click()  # 우측 상단 로그인 버튼 클릭
+    time.sleep(0.5)
 
-driver.find_element(By.CSS_SELECTOR, ".css-0").click() # 페이스북 로그인 버튼 클릭
-time.sleep(1)
+    driver.find_element(By.CSS_SELECTOR, ".css-0").click()  # 페이스북 로그인 버튼 클릭
+    time.sleep(1)
 
-original_window = driver.window_handles[0] # 메인 창 저장
+    original_window = driver.window_handles[0]  # 메인 창 저장
 
-# 페이스북 로그인 창으로 전환
-for window_handle in driver.window_handles:
-    driver.switch_to.window(window_handle)
-    if "Facebook" in driver.title:
-        break
+    # 페이스북 로그인 창으로 전환
+    for window_handle in driver.window_handles:
+        driver.switch_to.window(window_handle)
+        if "Facebook" in driver.title:
+            break
 
-time.sleep(0.5)
+    time.sleep(0.5)
 
-driver.find_element(By.CSS_SELECTOR, "#email").send_keys(config.EMAIL) # 이메일 입력
-driver.find_element(By.CSS_SELECTOR, "#pass").send_keys(config.PASSWORD) # 비밀번호 입력
-driver.find_element(By.CSS_SELECTOR, "#loginbutton").click() # 로그인 버튼 클릭
+    driver.find_element(By.CSS_SELECTOR, "#email").send_keys(config.EMAIL)  # 이메일 입력
+    driver.find_element(By.CSS_SELECTOR, "#pass").send_keys(config.PASSWORD)  # 비밀번호 입력
+    driver.find_element(By.CSS_SELECTOR, "#loginbutton").click()  # 로그인 버튼 클릭
 
-time.sleep(0.5)
-# 원래 창으로 전환(아래 오류 방지)
-# urllib3.exceptions.ProtocolError: ('Connection aborted.', ConnectionResetError(10054, '현재 연결은 원격 호스트에 의해 강제로 끊겼습니다', None, 10054, None))
-try:
-    driver.switch_to.window(original_window)
-except NoSuchWindowException:
-    pass
+    time.sleep(0.5)
+    # 원래 창으로 전환(아래 오류 방지)
+    # urllib3.exceptions.ProtocolError: ('Connection aborted.', ConnectionResetError(10054, '현재 연결은 원격 호스트에 의해 강제로 끊겼습니다', None, 10054, None))
+    try:
+        driver.switch_to.window(original_window)
+    except NoSuchWindowException:
+        pass
 
-time.sleep(1)
+    # time.sleep(1)
+    driver.get(config.HOGANGNONO_MAIN_URL)  # 메인 화면으로 이동을 통해 검색창 html 확보 셋팅
+    time.sleep(0.5)
 
-driver.get(config.HOGANGNONO_MAIN_URL) # 메인 화면으로 이동을 통해 검색창 html 확보 셋팅
-time.sleep(0.5)
+
+def search_apartment(apartment):
+
+
 
 driver.find_element(By.CLASS_NAME, "keyword").send_keys("반포동 반포자이", Keys.ENTER) # 특정 아파트 검색
 time.sleep(0.5)
