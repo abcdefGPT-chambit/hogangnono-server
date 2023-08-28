@@ -3,7 +3,6 @@ from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
-from selenium.webdriver import ActionChains
 from selenium.common.exceptions import NoSuchWindowException, StaleElementReferenceException
 import time
 import config
@@ -57,7 +56,6 @@ def login_hogangnono(driver):
     driver.get(config.HOGANGNONO_MAIN_URL)  # 메인 화면으로 이동을 통해 검색창 html 확보 셋팅
     time.sleep(0.5)
 
-# 반포동 반포자이
 def search_apartment_review(driver, apartment):
     driver.find_element(By.CLASS_NAME, "keyword").send_keys(apartment, Keys.ENTER)  # 특정 아파트 검색
     time.sleep(0.5)
@@ -94,3 +92,6 @@ def crawling_review(driver):
 
 if __name__ == "__main__":
     driver = initialize_driver()
+    login_hogangnono(driver)
+    search_apartment_review(driver, "반포동 반포자이")
+    crawling_review(driver)
