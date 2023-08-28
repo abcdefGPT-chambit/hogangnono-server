@@ -8,14 +8,15 @@ from selenium.common.exceptions import NoSuchWindowException, StaleElementRefere
 import time
 import config
 
-user_agent = config.USER_AGENT
+def initialize_driver():
+    user_agent = config.USER_AGENT
 
-options = Options()
-options.add_argument(f"user-agent={user_agent}")
-options.add_argument("--start-maximized")
-options.add_experimental_option("detach", True)
+    options = Options()
+    options.add_argument(f"user-agent={user_agent}")
+    options.add_argument("--start-maximized")
+    options.add_experimental_option("detach", True)
 
-driver = webdriver.Chrome(options=options)
+    return webdriver.Chrome(options=options)
 
 driver.get(config.HOGANGNONO_MAIN_URL)
 time.sleep(0.5)
@@ -72,7 +73,7 @@ for i in range(10):
     except StaleElementReferenceException: # 더보기 버튼이 없으면 exception 발생. 따라서 스크롤 하도록 로직 구성
         element = driver.find_element(By.CSS_SELECTOR, ".css-5k4zdz.scroll-content > .css-0")
         driver.execute_script("arguments[0].scrollIntoView();", element)
-    time.sleep(0.5)
+    time.sleep(1)
 
 html = driver.page_source
 
@@ -87,3 +88,6 @@ for review in reviews:
         text = text_element.get_text(strip=True)
         print(text)
         print()
+
+if __name__ == "__main__":
+    print("test")
