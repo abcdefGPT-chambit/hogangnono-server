@@ -57,19 +57,18 @@ def login_hogangnono(driver):
     driver.get(config.HOGANGNONO_MAIN_URL)  # 메인 화면으로 이동을 통해 검색창 html 확보 셋팅
     time.sleep(0.5)
 
+# 반포동 반포자이
+def search_apartment_review(driver, apartment):
+    driver.find_element(By.CLASS_NAME, "keyword").send_keys(apartment, Keys.ENTER)  # 특정 아파트 검색
+    time.sleep(0.5)
 
-def search_apartment(apartment):
+    driver.find_elements(By.CLASS_NAME, "label-container")[0].click()  # 특정 아파트 클릭
+    time.sleep(0.5)
+
+    driver.get(driver.current_url + "/2/review")  # 특정 아파트의 후기 페이지로 이동
+    time.sleep(1)
 
 
-
-driver.find_element(By.CLASS_NAME, "keyword").send_keys("반포동 반포자이", Keys.ENTER) # 특정 아파트 검색
-time.sleep(0.5)
-
-driver.find_elements(By.CLASS_NAME, "label-container")[0].click() # 특정 아파트 클릭
-time.sleep(0.5)
-
-driver.get(driver.current_url + "/2/review") # 특정 아파트의 후기 페이지로 이동
-time.sleep(1)
 
 for i in range(10):
     try: # 더보기 버튼이 있으면 클릭
