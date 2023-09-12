@@ -36,29 +36,30 @@ driver.implicitly_wait(5)
 Aparts = driver.find_element(By.CLASS_NAME, 'apt').click() #Select Apartment
 driver.implicitly_wait(5)
 
-#get more information about transactions
-for _ in range(5):
+#get more information about transactions until year 5
+while True:
     driver.find_element(By.CLASS_NAME, 'css-d8143a').click()
+    driver.implicitly_wait(0.5)
+    curdatahtml = driver.page_source
 
-#find prices by XPATH
-# Prices = driver.find_elements(By.XPATH, '//*[@id="scrollElement"]/div/div[5]/div/div[2]/div[3]/table/tbody')
+    cursoup = BeautifulSoup(curdatahtml, 'html.parser')
+    cursearch_result = cursoup.select('.ebmi0c77')
+    DateData = int(cursearch_result[-1].get_text().replace('.', ''))
+    print(DateData)
+    if (DateData<=230301): #get data until 230301
+        break
 
-# for Price in Prices:
-#     print(Price.text)
-
+#we have to put sleep because before click operation ends html parser start to crawl
+driver.implicitly_wait(0.5)
 html = driver.page_source
 soup = BeautifulSoup(html, 'html.parser')
 search_result = soup.select_one('.realPrice')
 
+Date = search_result.select('.ebmi0c77')
 Price = search_result.select('.ebmi0c75')
+Floor = search_result.select('.ebmi0c73')
 
-for i in s:
-    TEXT = i.get_text()
-    print(TEXT)
-
-#가격이 위치한곳이 Xpath
-#//*[@id="scrollElement"]/div/div[5]/div/div[2]/div[3]/table/tbody/tr[23]/td[2]/div
-#//*[@id="scrollElement"]/div/div[5]/div/div[2]/div[3]/table/tbody/tr[24]/td[2]/div
-#//*[@id="scrollElement"]/div/div[5]/div/div[2]/div[3]/table/tbody/tr[35]/td[2]/div
+for A,B,C in zip(Date,Price,Floor):
+    print("Date: {}, Floor: {}, Price: {}".format(A.get_text(),C.get_text(),B.get_text()))
 
 
