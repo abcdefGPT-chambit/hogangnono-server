@@ -8,6 +8,9 @@ import time
 import config
 import json
 
+import stop_words
+
+
 def initialize_driver():
     user_agent = config.USER_AGENT
 
@@ -36,7 +39,7 @@ def login_hogangnono(driver):
 
     driver.switch_to.window(original_window)
     time.sleep(4)
-    driver.get("https://hogangnono.com/apt/9a30/0/7/review")
+    driver.get("https://hogangnono.com/apt/e694a/0/3/review")
     time.sleep(0.5)
 
 def crawling_review(driver):
@@ -56,9 +59,17 @@ def crawling_review(driver):
         text_elements = review.select(".css-dei5sc > .css-9uvvzn > .css-1maot43.e1gnm0r1")  # 리뷰 text가 담긴 class
         for text_element in text_elements:
             text = text_element.get_text(strip=True)
-            review_list.append({"review" : text})
-    review_json = json.dumps(review_list, ensure_ascii=False, indent=4)
 
+            have_stop_word = False
+            for stop_word in stop_words.dictionary:
+                if stop_word in text:
+                    have_stop_word = True
+
+            if not have_stop_word:
+                review_list.append({"review" : text})
+
+    print(len(review_list))
+    review_json = json.dumps(review_list, ensure_ascii=False, indent=4)
     print(review_json)
 
 if __name__ == "__main__":
