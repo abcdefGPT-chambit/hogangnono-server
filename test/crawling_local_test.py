@@ -20,6 +20,7 @@ def initialize_driver():
     options.add_experimental_option("detach", True)
     return webdriver.Chrome(options=options)
 
+
 def login_hogangnono(driver):
     driver.get(config.HOGANGNONO_MAIN_URL)
     driver.find_element(By.CSS_SELECTOR, ".css-wyfpkg").click()  # SMS 설치 팝업창 닫기
@@ -42,6 +43,7 @@ def login_hogangnono(driver):
     driver.get("https://hogangnono.com/apt/e694a/0/3/review")
     time.sleep(0.5)
 
+
 def crawling_review(driver):
     review_list = []
     for i in range(10):
@@ -56,21 +58,24 @@ def crawling_review(driver):
     soup = BeautifulSoup(html, "html.parser")
     reviews = soup.select(".css-5k4zdz.scroll-content > .css-0")  # 리뷰 전체를 가지고 있는 가장 큰 class
     for review in reviews:
-        text_elements = review.select(".css-dei5sc > .css-9uvvzn > .css-1maot43.e1gnm0r1")  # 리뷰 text가 담긴 class
-        for text_element in text_elements:
-            text = text_element.get_text(strip=True)
+        review_elements = review.select(".css-dei5sc > .css-9uvvzn > .css-1maot43.e1gnm0r1")  # 리뷰 text가 담긴 class
+        for review_element in review_elements:
+            review_text = review_element.get_text(strip=True)
 
-            have_stop_word = False
-            for stop_word in stop_words.dictionary:
-                if stop_word in text:
-                    have_stop_word = True
-
-            if not have_stop_word:
-                review_list.append({"review" : text})
+            if not have_stop_word(review_text):
+                review_list.append({"review": review_text})
 
     print(len(review_list))
     review_json = json.dumps(review_list, ensure_ascii=False, indent=4)
     print(review_json)
+
+
+def have_stop_word(review_text):
+    for stop_word in stop_words.dictionary:
+        if stop_word in review_text:
+            return True
+    return False
+
 
 if __name__ == "__main__":
     driver = initialize_driver()
