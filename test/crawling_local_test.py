@@ -80,6 +80,13 @@ def crawling_review(driver):
             if not have_stop_word(review_text):
                 review_list.append({"review": review_text})
 
+        print(f"불용어 처리 후 후기 수:{len(review_list)}")
+        for i in range(len(review_list)):
+            # if not have_stop_word(review_list[i]) and like_list[i] > 10:
+            if like_list[i] > 10:
+                processing_list.append(review_list[i])
+        print(f"불용어 처리 + 일정 공감 수 이상 처리 후기 수:{len(processing_list)}")
+
         # for reply_element in reply_elements:
         #     reply_text = reply_element.get_text(strip=True)
         # print(reply_text)
