@@ -9,6 +9,7 @@ import json
 import stop_words
 import re
 
+like_text_pattern = r'(\d+)명'
 
 def initialize_driver():
     user_agent = config.USER_AGENT
