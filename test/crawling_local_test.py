@@ -65,6 +65,14 @@ def crawling_review(driver):
         like_elements = review.select(".css-dei5sc > .css-qvx8ct")
         # reply_elements = review.select(".css-19sk4h4 > .css-1901ou2 > .css-e3ehlk")
 
+        for like_element in like_elements:
+            like_text = like_element.get_text(strip=True)
+            match_result = re.search(like_text_pattern, like_text)
+            like_num = 0
+            if match_result:
+                like_num = int(match_result.group(1))
+            like_list.append(like_num)
+
         for review_element in review_elements:
             review_text = review_element.get_text(strip=True)
             if "더보기" in review_text:
