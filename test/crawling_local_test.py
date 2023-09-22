@@ -2,13 +2,12 @@ from bs4 import BeautifulSoup
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
-from selenium.webdriver.common.keys import Keys
 from selenium.common.exceptions import NoSuchWindowException, StaleElementReferenceException, NoSuchElementException
 import time
 import config
 import json
-
 import stop_words
+import re
 
 
 def initialize_driver():
@@ -40,12 +39,14 @@ def login_hogangnono(driver):
 
     driver.switch_to.window(original_window)
     time.sleep(4)
-    driver.get("https://hogangnono.com/apt/e694a/0/3/review")
+    driver.get("https://hogangnono.com/apt/B9df/0/8/review")
     time.sleep(0.5)
 
 
 def crawling_review(driver):
     review_list = []
+    like_list = []
+    processing_list = []
     for i in range(10):
         try:  # 더보기 버튼이 있으면 클릭
             more_button = driver.find_element(By.CLASS_NAME, "css-wri049")
@@ -53,21 +54,28 @@ def crawling_review(driver):
         except StaleElementReferenceException or NoSuchElementException:  # 더보기 버튼이 없으면 exception 발생. 따라서 스크롤 하도록 로직 구성
             element = driver.find_element(By.CSS_SELECTOR, ".css-5k4zdz.scroll-content > .css-0")
             driver.execute_script("arguments[0].scrollIntoView();", element)
-        time.sleep(0.5)
+        time.sleep(1)
     html = driver.page_source
     soup = BeautifulSoup(html, "html.parser")
     reviews = soup.select(".css-5k4zdz.scroll-content > .css-0")  # 리뷰 전체를 가지고 있는 가장 큰 class
+
     for review in reviews:
-        review_elements = review.select(".css-dei5sc > .css-9uvvzn > .css-1maot43.e1gnm0r1")  # 리뷰 text가 담긴 class
+        review_elements = review.select(".css-dei5sc > .css-9uvvzn")  # 리뷰 text가 담긴 class
+        # reply_elements = review.select(".css-19sk4h4 > .css-1901ou2 > .css-e3ehlk")
+
         for review_element in review_elements:
             review_text = review_element.get_text(strip=True)
-
+            if "더보기" in review_text:
+                review_text = review_text.replace("더보기", "")
             if not have_stop_word(review_text):
                 review_list.append({"review": review_text})
 
-    print(len(review_list))
-    review_json = json.dumps(review_list, ensure_ascii=False, indent=4)
-    print(review_json)
+        # for reply_element in reply_elements:
+        #     reply_text = reply_element.get_text(strip=True)
+        # print(reply_text)
+
+    json_review_list = json.dumps(processing_list, ensure_ascii=False, indent=4)
+    print(json_review_list)
 
 
 def have_stop_word(review_text):
