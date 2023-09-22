@@ -61,6 +61,7 @@ def crawling_review(driver):
 
     for review in reviews:
         review_elements = review.select(".css-dei5sc > .css-9uvvzn")  # 리뷰 text가 담긴 class
+        like_elements = review.select(".css-dei5sc > .css-qvx8ct")
         # reply_elements = review.select(".css-19sk4h4 > .css-1901ou2 > .css-e3ehlk")
 
         for review_element in review_elements:
