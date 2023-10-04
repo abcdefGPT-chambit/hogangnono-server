@@ -17,6 +17,7 @@ def initialize_driver():
     options.add_argument(f"user-agent={user_agent}")
     options.add_argument("--start-maximized")
     options.add_experimental_option("detach", True)
+    options.add_argument('headless')
     return webdriver.Chrome(options=options)
 
 
@@ -39,7 +40,7 @@ def login_hogangnono(driver):
 
     driver.switch_to.window(original_window)
     time.sleep(4)
-    driver.get("https://hogangnono.com/apt/6di7b/0/8/review")
+    driver.get("https://hogangnono.com/apt/qna9/0/2/review")
     time.sleep(0.5)
 
 
@@ -49,14 +50,14 @@ def crawling_review(driver):
     processing_list = []
     temp1_list = []
     temp2_list= []
-    for i in range(35):
+    for i in range(20):
         try:  # 더보기 버튼이 있으면 클릭
             more_button = driver.find_element(By.CLASS_NAME, "css-wri049")
             more_button.click()
         except StaleElementReferenceException or NoSuchElementException:  # 더보기 버튼이 없으면 exception 발생. 따라서 스크롤 하도록 로직 구성
             element = driver.find_element(By.CSS_SELECTOR, ".css-5k4zdz.scroll-content > .css-0")
             driver.execute_script("arguments[0].scrollIntoView();", element)
-        time.sleep(0.8)
+        time.sleep(1)
     html = driver.page_source
     soup = BeautifulSoup(html, "html.parser")
     reviews = soup.select(".css-5k4zdz.scroll-content > .css-0")  # 리뷰 전체를 가지고 있는 가장 큰 class
@@ -78,7 +79,7 @@ def crawling_review(driver):
             review_text = review_element.get_text(strip=True)
             if "더보기" in review_text:
                 review_text = review_text.replace("더보기", "")
-            if not have_stop_word(review_text):
+            if not have_stop_word(review_text) and len(review_text) > 20: # 불용어를 가지고 있지 않고, 20자 이상인 경우
                 review_list.append({"review": review_text})
                 temp1_list.append(review_text)
 
