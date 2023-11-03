@@ -7,6 +7,7 @@ import time
 from config import config
 
 
+
 def initialize_driver():
     user_agent = config.USER_AGENT
 

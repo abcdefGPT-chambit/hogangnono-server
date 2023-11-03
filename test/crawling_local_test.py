@@ -40,7 +40,7 @@ def login_hogangnono(driver):
 
     driver.switch_to.window(original_window)
     time.sleep(4)
-    driver.get("https://hogangnono.com/apt/qna9/0/2/review")
+    driver.get("https://hogangnono.com/apt/ojda/0/10/review")
     time.sleep(0.5)
 
 
@@ -85,16 +85,13 @@ def crawling_review(driver):
 
         #print(f"불용어 처리 후 후기 수:{len(review_list)}")
         for i in range(len(review_list)):
-            if like_list[i] > 10:
+            if like_list[i] > 10 and len(processing_list) <= 30:
                 processing_list.append(review_list[i])
                 temp2_list.append(temp1_list[i])
         print(f"불용어 처리 + 일정 공감 수 이상 처리 후기 수:{len(processing_list)}")
 
         for temp in temp2_list:
             print(temp)
-        # for reply_element in reply_elements:
-        #     reply_text = reply_element.get_text(strip=True)
-        # print(reply_text)
 
     json_review_list = json.dumps(processing_list, ensure_ascii=False, indent=4)
     #print(json_review_list)

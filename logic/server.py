@@ -2,6 +2,7 @@ from flask import Flask, request  # request 추가
 import crawling
 import concurrent.futures
 import json
+import os
 
 app = Flask(__name__)
 
@@ -16,6 +17,10 @@ def index():
     review_json = json.dumps(review_list, ensure_ascii=False, indent=4)
 
     return review_json
+
+# @app.route('/getResult')
+# def getResult():
+
 
 if __name__ == '__main__':
     app.run()
