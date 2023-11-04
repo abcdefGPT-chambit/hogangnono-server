@@ -42,6 +42,37 @@ def web_insertdata():
 
     return "{'status' : '200', 'message' : 'ok'}"
 
+# 프론트 측으로부터 받은 apt_code와 apt_name을 바탕으로 데이터들 반환
+@app.route('/getdata', methods=['GET'])
+def web_getdata():
+    apt_code = request.args.get('apt_code')
+    apt_name = request.args.get('apt_name')
+
+    if not apt_code or not apt_name:
+        return jsonify({'error': 'Please provide both apt_code and apt_name'}), 400
+
+    # apt_review 데이터
+    reviews = AptReview.query.filter_by(apt_code=apt_code).all()
+    review_list = [
+        {'category': review.category, 'review': review.review}
+        for review in reviews
+    ]
+
+    # apt_trade 데이터
+    trades = AptTrade.query.filter_by(apt_code=apt_code).all()
+    trade_list = [
+        {'highest': trade.highest, 'lowest': trade.lowest, 'high_floor': trade.high_floor,
+         'middle_floor': trade.middle_floor, 'low_floor': trade.low_floor, 'trade_trend': trade.trade_trend}
+        for trade in trades
+    ]
+
+    # JSON으로 결과 반환
+    return jsonify({
+        'apt_code': apt_code,
+        'apt_name': apt_name,
+        'reviews': review_list,
+        'trades': trade_list
+    })
 
 if __name__ == '__main__':
     app.run()
