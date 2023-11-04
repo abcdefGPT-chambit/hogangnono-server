@@ -20,7 +20,6 @@ def initialize_driver():
     options.add_argument('headless')
     return webdriver.Chrome(options=options)
 
-
 def login_hogangnono(driver):
     driver.get(config.HOGANGNONO_MAIN_URL)
     driver.find_element(By.CSS_SELECTOR, ".css-wyfpkg").click()  # SMS 설치 팝업창 닫기
@@ -79,7 +78,7 @@ def crawling_review(driver):
             review_text = review_element.get_text(strip=True)
             if "더보기" in review_text:
                 review_text = review_text.replace("더보기", "")
-            if not have_stop_word(review_text) and len(review_text) > 20: # 불용어를 가지고 있지 않고, 20자 이상인 경우
+            if not have_stop_word(review_text) and len(review_text) > 20 and len(temp1_list) < 16: # 불용어를 가지고 있지 않고, 20자 이상인 경우
                 review_list.append({"review": review_text})
                 temp1_list.append(review_text)
 
