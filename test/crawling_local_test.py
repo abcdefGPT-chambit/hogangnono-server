@@ -40,7 +40,7 @@ def login_hogangnono(driver):
 
     driver.switch_to.window(original_window)
     time.sleep(4)
-    driver.get("https://hogangnono.com/apt/ojda/0/10/review")
+    driver.get("https://hogangnono.com/apt/aAh37/0/21/review")
     time.sleep(0.5)
 
 
@@ -50,7 +50,7 @@ def crawling_review(driver):
     processing_list = []
     temp1_list = []
     temp2_list= []
-    for i in range(20):
+    for i in range(50):
         try:  # 더보기 버튼이 있으면 클릭
             more_button = driver.find_element(By.CLASS_NAME, "css-wri049")
             more_button.click()
