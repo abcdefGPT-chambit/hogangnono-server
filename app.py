@@ -1,9 +1,13 @@
 from flask import Flask, jsonify, request
+from flask_cors import CORS
 import pandas as pd
 from db_models import db, AptReview, AptTrade, AptInfo
 from config import config
 
 app = Flask(__name__)
+
+# 모든 도메인에 대해 CORS를 허용하도록 설정
+CORS(app)
 
 # DB 설정
 app.config['SQLALCHEMY_DATABASE_URI'] = config.SQLALCHEMY_DATABASE_URI
