@@ -1,6 +1,6 @@
 from flask import Flask, jsonify, request
 import pandas as pd
-from models import db, AptReview, AptTrade
+from db_models import db, AptReview, AptTrade, AptInfo
 from config import config
 
 app = Flask(__name__)
@@ -16,6 +16,7 @@ with app.app_context():
 # CSV 파일의 데이터를 DB에 구축
 @app.route('/insertdata', methods=['POST'])
 def web_insertdata():
+
     review_df = pd.read_csv('dataset/20231105_apt_review.csv')
     for index, row in review_df.iterrows():
         review = AptReview(

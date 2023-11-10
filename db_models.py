@@ -17,6 +17,7 @@ class AptTrade(db.Model):
     __tablename__ = 'apt_trade'
     id = db.Column(db.Integer, primary_key=True)  # 각 거래의 고유 ID
     apt_code = db.Column(db.String(255), db.ForeignKey('apt_info.apt_code'))  # 외래 키로 설정
+    apt_py = db.Column(db.Integer)
     highest = db.Column(db.String(255))
     lowest = db.Column(db.String(255))
     high_floor = db.Column(db.String(255))
