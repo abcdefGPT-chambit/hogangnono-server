@@ -3,6 +3,19 @@ from flask_cors import CORS
 import pandas as pd
 from db_models import db, AptReview, AptTrade, AptInfo
 from config import config
+import os
+from langchain.schema import (
+    AIMessage,
+    HumanMessage,
+    SystemMessage
+)
+from langchain.chat_models import ChatOpenAI
+
+# GPT API 설정
+import constants
+os.environ["OPENAI_API_KEY"] = constants.APIKEY
+chat_model = ChatOpenAI(model_name='gpt-4', temperature=0, openai_api_key=constants.APIKEY)
+
 
 app = Flask(__name__)
 
@@ -78,6 +91,22 @@ def web_getdata():
         'reviews': review_list,
         'trades': trade_list
     })
+
+@app.route('/gpt_api', methods=['POST'])
+def gpt_api():
+    data = request.json
+    if not data:
+        return jsonify({'error': 'No string provided'}), 400
+
+    provided_string = data['message']
+
+    response = return_from_gpt(provided_string)
+    response_dict = {'content': response.content, 'type': response.type}
+    return jsonify({'message': response_dict})
+
+def return_from_gpt(message):
+    response = chat_model([SystemMessage(content="한국어로 완성된 문장으로 대답해줘"), HumanMessage(content=message)])
+    return response
 
 
 # 로드밸런서의 테스트를 위한 기본 응답
