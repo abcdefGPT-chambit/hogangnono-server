@@ -79,5 +79,11 @@ def web_getdata():
         'trades': trade_list
     })
 
+
+# 로드밸런서의 테스트를 위한 기본 응답
+@app.route('/', methods=['GET'])
+def initial_request():
+    return jsonify({'success': 'initial request'}), 200
+
 if __name__ == '__main__':
     app.run()
