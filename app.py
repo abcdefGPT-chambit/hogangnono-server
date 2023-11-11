@@ -4,17 +4,37 @@ import pandas as pd
 from db_models import db, AptReview, AptTrade, AptInfo
 from config import config
 import os
+from langchain.chat_models import ChatOpenAI
 from langchain.schema import (
     AIMessage,
     HumanMessage,
     SystemMessage
 )
-from langchain.chat_models import ChatOpenAI
+from langchain.agents import create_pandas_dataframe_agent
 
 # GPT API 설정
 import constants
 os.environ["OPENAI_API_KEY"] = constants.APIKEY
-chat_model = ChatOpenAI(model_name='gpt-4', temperature=0, openai_api_key=constants.APIKEY)
+chat = ChatOpenAI(model_name='gpt-4', temperature=0, openai_api_key=constants.APIKEY)
+#temperature 값을 수정하여 모델의 온도를 변경할 수  있다. default는 0.7, 1에 가까울 수록 다양성 증진
+#chat([SystemMessage(content="완결된 한국어 문장으로 대답해줘")])
+
+# Load Data
+df = pd.read_csv('data/Seoul_Transaction_Sep.csv')
+# print(df.head())
+Seoul_df = df.copy()
+Data_df = df.copy()
+Data_df.drop(0, inplace=True)
+Data_df.reset_index(drop=True, inplace=True)
+Seoul_df = Seoul_df.iloc[:1]
+
+# GPT version 3 사용
+# agent1 = create_pandas_dataframe_agent(OpenAI(temperature=0),Seoul_df,verbose=True)
+# agent2 = create_pandas_dataframe_agent(OpenAI(temperature=0),Data_df,verbose=True)
+# GPT version 4 사용
+agent1 = create_pandas_dataframe_agent(chat,Seoul_df,verbose=True)
+agent2 = create_pandas_dataframe_agent(chat,Data_df,verbose=True)
+# verbose는 생각의 과정을 설정해준다.
 
 
 app = Flask(__name__)
@@ -105,8 +125,26 @@ def gpt_api():
     return jsonify({'message': response_dict})
 
 def return_from_gpt(message):
-    response = chat_model([SystemMessage(content="한국어로 완성된 문장으로 대답해줘"), HumanMessage(content=message)])
+    response = chat([SystemMessage(content="한국어로 완성된 문장으로 대답해줘"), HumanMessage(content=message)])
     return response
+
+
+@app.route('/get_answers', methods=['POST'])
+def get_answers():
+    data = request.json
+    if not data:
+        return jsonify({'error': 'No string provided'}), 400
+
+    provided_string = data['message']
+    answer = agent2.run( provided_string + "완결된 한국어 문장으로 대답해줘. 변수를 출력하는게 아닌 실제 값을 알려줘")
+
+    # 질문과 답변을 쌍으로 묶어 JSON 형식으로 구성
+    qna_pairs = [
+        {"question": provided_string, "answer": answer}
+    ]
+
+    # JSON으로 변환하여 반환
+    return jsonify(qna_pairs)
 
 
 # 로드밸런서의 테스트를 위한 기본 응답
