@@ -136,7 +136,10 @@ def get_answers():
         return jsonify({'error': 'No string provided'}), 400
 
     provided_string = data['message']
-    answer = agent2.run( provided_string + "완결된 한국어 문장으로 대답해줘. 변수를 출력하는게 아닌 실제 값을 알려줘")
+    provided_string = chat([HumanMessage(content=provided_string + "영어로 번역해줘")]).content
+    answer = agent2.run(provided_string)
+    #answer = agent2.run(provided_string + "Please add a basis for the answer")
+    answer = chat([HumanMessage(content=answer + "완결된 한국어 문장으로 번역해줘")]).content
 
     # 질문과 답변을 쌍으로 묶어 JSON 형식으로 구성
     qna_pairs = [
