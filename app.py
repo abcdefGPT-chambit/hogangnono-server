@@ -64,18 +64,18 @@ def getFile(filename):
 @app.route('/insertdata', methods=['POST'])
 def web_insertdata():
 
-    getFile('dataset/apt_review/1_Gracium_Label.csv')
-    getFile('dataset/apt_review/2_Heliocity_Label.csv')
-    getFile('dataset/apt_review/3_Mapo_raemian_pruzio_Label.csv')
-    getFile('dataset/apt_review/4_Banpo_raemian_firstage_Label.csv')
-    getFile('dataset/apt_review/5_Dogok_rexle_Label.csv')
-    getFile('dataset/apt_review/6_recents_Label.csv')
-    getFile('dataset/apt_review/7_DMC_parkview_xi_Label.csv')
-    getFile('dataset/apt_review/8_Gileum_raemiman_centerpiece_Label.csv')
-    getFile('dataset/apt_review/9_arteon_Label.csv')
-    getFile('dataset/apt_review/10_parkrio_Label.csv')
+    getFile('database/dataset/apt_review/1_Gracium_Label.csv')
+    getFile('database/dataset/apt_review/2_Heliocity_Label.csv')
+    getFile('database/dataset/apt_review/3_Mapo_raemian_pruzio_Label.csv')
+    getFile('database/dataset/apt_review/4_Banpo_raemian_firstage_Label.csv')
+    getFile('database/dataset/apt_review/5_Dogok_rexle_Label.csv')
+    getFile('database/dataset/apt_review/6_recents_Label.csv')
+    getFile('database/dataset/apt_review/7_DMC_parkview_xi_Label.csv')
+    getFile('database/dataset/apt_review/8_Gileum_raemiman_centerpiece_Label.csv')
+    getFile('database/dataset/apt_review/9_arteon_Label.csv')
+    getFile('database/dataset/apt_review/10_parkrio_Label.csv')
 
-    trade_df = pd.read_csv('dataset/20231105_apt_trade.csv')
+    trade_df = pd.read_csv('database/Apt_transaction_result.csv')
     for index, row in trade_df.iterrows():
         trade = AptTrade(
             apt_code=row['apt_code'],
