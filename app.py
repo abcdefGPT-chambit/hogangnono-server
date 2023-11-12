@@ -10,6 +10,8 @@ from langchain.schema import (
     HumanMessage,
     SystemMessage
 )
+
+
 from langchain.agents import create_pandas_dataframe_agent
 
 # GPT API 설정
@@ -75,16 +77,19 @@ def web_insertdata():
     getFile('database/dataset/apt_review/9_arteon_Label.csv')
     getFile('database/dataset/apt_review/10_parkrio_Label.csv')
 
-    trade_df = pd.read_csv('database/Apt_transaction_result.csv')
+    trade_df = pd.read_csv('database/dataset/apt_trade/Apt_transaction_result.csv')
     for index, row in trade_df.iterrows():
         trade = AptTrade(
             apt_code=row['apt_code'],
-            highest=row['highest'],
-            lowest=row['lowest'],
-            high_floor=row['high_floor'],
-            middle_floor=row['middle_floor'],
-            low_floor=row['low_floor'],
-            trade_trend=row['trade_trend']
+            apt_sq=row['apt_sq'],
+            avg_price=row['avg_price'],
+            top_avg_price=row['top_avg_price'],
+            bottom_avg_price=row['bottom_avg_price'],
+            recent_avg=row['recent_avg'],
+            recent_top=row['recent_top'],
+            recent_bottom=row['recent_bottom'],
+            trade_trend=row['trade_trend'],
+            price_trend=row['price_trend']
         )
         db.session.add(trade)
 
@@ -111,8 +116,9 @@ def web_getdata():
     # apt_trade 데이터
     trades = AptTrade.query.filter_by(apt_code=apt_code).all()
     trade_list = [
-        {'highest': trade.highest, 'lowest': trade.lowest, 'high_floor': trade.high_floor,
-         'middle_floor': trade.middle_floor, 'low_floor': trade.low_floor, 'trade_trend': trade.trade_trend}
+        {'apt_sq': trade.apt_sq, 'avg_price': trade.avg_price, 'top_avg_price': trade.top_avg_price,
+         'bottom_avg_price': trade.bottom_avg_price, 'recent_avg': trade.recent_avg, 'recent_top': trade.recent_top,
+         'recent_bottom': trade.recent_bottom, 'trade_trend': trade.trade_trend, 'price_trend': trade.price_trend}
         for trade in trades
     ]
 
@@ -123,6 +129,8 @@ def web_getdata():
         'reviews': review_list,
         'trades': trade_list
     })
+
+
 
 @app.route('/gpt_api', methods=['POST'])
 def gpt_api():
