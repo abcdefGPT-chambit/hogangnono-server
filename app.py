@@ -161,9 +161,9 @@ def get_answers():
     #answer = agent2.run(provided_string + "Please add a basis for the answer")
     answer = chat([HumanMessage(content=answer + "완결된 한국어 문장으로 번역해줘")]).content
 
-    # 질문과 답변을 쌍으로 묶어 JSON 형식으로 구성
+    # 답변을 JSON 형식으로 구성
     qna_pairs = [
-        {"question": provided_string, "answer": answer}
+        {"answer": answer}
     ]
 
     # JSON으로 변환하여 반환
