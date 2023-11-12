@@ -17,11 +17,8 @@ db.init_app(app)
 with app.app_context():
     db.create_all()
 
-# CSV 파일의 데이터를 DB에 구축
-@app.route('/insertdata', methods=['POST'])
-def web_insertdata():
-
-    review_df = pd.read_csv('dataset/20231105_apt_review.csv')
+def getFile(filename):
+    review_df = pd.read_csv(filename)
     for index, row in review_df.iterrows():
         review = AptReview(
             apt_code=row['apt_code'],
@@ -29,6 +26,21 @@ def web_insertdata():
             review=row['review']
         )
         db.session.add(review)
+
+# CSV 파일의 데이터를 DB에 구축
+@app.route('/insertdata', methods=['POST'])
+def web_insertdata():
+
+    getFile('dataset/apt_review/1_Gracium_Label.csv')
+    getFile('dataset/apt_review/2_Heliocity_Label.csv')
+    getFile('dataset/apt_review/3_Mapo_raemian_pruzio_Label.csv')
+    getFile('dataset/apt_review/4_Banpo_raemian_firstage_Label.csv')
+    getFile('dataset/apt_review/5_Dogok_rexle_Label.csv')
+    getFile('dataset/apt_review/6_recents_Label.csv')
+    getFile('dataset/apt_review/7_DMC_parkview_xi_Label.csv')
+    getFile('dataset/apt_review/8_Gileum_raemiman_centerpiece_Label.csv')
+    getFile('dataset/apt_review/9_arteon_Label.csv')
+    getFile('dataset/apt_review/10_parkrio_Label.csv')
 
     trade_df = pd.read_csv('dataset/20231105_apt_trade.csv')
     for index, row in trade_df.iterrows():
