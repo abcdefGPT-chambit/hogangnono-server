@@ -151,23 +151,6 @@ def web_get_name_sq():
 
 
 
-@app.route('/gpt_api', methods=['POST'])
-def gpt_api():
-    data = request.json
-    if not data:
-        return jsonify({'error': 'No string provided'}), 400
-
-    provided_string = data['message']
-
-    response = return_from_gpt(provided_string)
-    response_dict = {'content': response.content, 'type': response.type}
-    return jsonify({'message': response_dict})
-
-def return_from_gpt(message):
-    response = chat([SystemMessage(content="한국어로 완성된 문장으로 대답해줘"), HumanMessage(content=message)])
-    return response
-
-
 @app.route('/get_answers', methods=['POST'])
 def get_answers():
     data = request.json
@@ -187,6 +170,31 @@ def get_answers():
 
     # JSON으로 변환하여 반환
     return jsonify(qna_pairs)
+
+def search_apartments(search_str):
+    if(len(search_str) == 1) :
+        results = AptInfo.query.filter(AptInfo.apt_name.like(f"%{search_str}%")).all()
+    else :
+        results = ""
+
+    apartments = [
+        {"apt_code": apt.apt_code, "apt_name": apt.apt_name}
+        for apt in results
+    ]
+    return apartments
+
+@app.route('/search', methods=['POST'])
+def search_apt():
+    data = request.json
+    if not data:
+        return jsonify({'error': 'No string provided'}), 400
+
+    provided_string = data['message']
+
+    apartment_list = search_apartments(provided_string)
+
+    # JSON으로 변환하여 반환
+    return jsonify(apartment_list)
 
 
 # 로드밸런서의 테스트를 위한 기본 응답
