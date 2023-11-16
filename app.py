@@ -151,21 +151,21 @@ def web_get_name_sq():
 
 
 
-# @app.route('/gpt_api', methods=['POST'])
-# def gpt_api():
-#     data = request.json
-#     if not data:
-#         return jsonify({'error': 'No string provided'}), 400
-#
-#     provided_string = data['message']
-#
-#     response = return_from_gpt(provided_string)
-#     response_dict = {'content': response.content, 'type': response.type}
-#     return jsonify({'message': response_dict})
-#
-# def return_from_gpt(message):
-#     response = chat([SystemMessage(content="한국어로 완성된 문장으로 대답해줘"), HumanMessage(content=message)])
-#     return response
+@app.route('/gpt_api', methods=['POST'])
+def gpt_api():
+    data = request.json
+    if not data:
+        return jsonify({'error': 'No string provided'}), 400
+
+    provided_string = data['message']
+
+    response = return_from_gpt(provided_string)
+    response_dict = {'content': response.content, 'type': response.type}
+    return jsonify({'message': response_dict})
+
+def return_from_gpt(message):
+    response = chat([SystemMessage(content="한국어로 완성된 문장으로 대답해줘"), HumanMessage(content=message)])
+    return response
 
 
 @app.route('/get_answers', methods=['POST'])
