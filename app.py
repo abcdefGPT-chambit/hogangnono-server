@@ -190,7 +190,8 @@ def search_apartments(search_str):
         score_column = func.coalesce(sum(case_statements), 0).label('score')
 
         # 쿼리 생성 및 실행
-        query = AptInfo.query.with_entities(AptInfo, score_column).order_by(score_column.desc())
+        query = AptInfo.query.with_entities(AptInfo, score_column).filter(score_column > 0).order_by(
+            score_column.desc())
         results = query.all()
 
         apartments = [
