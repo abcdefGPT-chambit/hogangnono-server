@@ -231,6 +231,23 @@ def search_apt():
     return jsonify(apartment_list)
 
 
+@app.route('/gpt_api', methods=['POST'])
+def gpt_api():
+    data = request.json
+    if not data:
+        return jsonify({'error': 'No string provided'}), 400
+
+    provided_string = data['message']
+
+    response = return_from_gpt(provided_string)
+    response_dict = {'content': response.content, 'type': response.type}
+    return jsonify({'message': response_dict})
+
+def return_from_gpt(message):
+    response = chat([SystemMessage(content="한국어로 완성된 문장으로 대답해줘"), HumanMessage(content=message)])
+    return response
+
+
 # 로드밸런서의 테스트를 위한 기본 응답
 @app.route('/', methods=['GET'])
 def initial_request():
