@@ -1,5 +1,5 @@
 from flask import Flask, jsonify, request
-from flask_cors import CORS
+from flask_cors import CORS, cross_origin
 import pandas as pd
 from db_models import db, AptReview, AptTrade, AptInfo
 from config import config
@@ -171,6 +171,7 @@ def web_get_name():
     return jsonify(name_sq_list)
 
 @app.route('/get_answers', methods=['POST'])
+@cross_origin()
 def get_answers():
     data = request.json
     if not data:
@@ -232,6 +233,7 @@ def search_apt():
 
 
 @app.route('/gpt_api', methods=['POST'])
+@cross_origin()
 def gpt_api():
     data = request.json
     if not data:
