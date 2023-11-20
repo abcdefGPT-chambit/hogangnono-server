@@ -134,7 +134,7 @@ def web_getdata():
 
 
 # 모든 아파트의 이름과 평형을 반환하는 API
-@app.route('/get/name-sq', methods=['GET'])
+@app.route('/get/all-name-sq', methods=['GET'])
 def web_get_name_sq():
     # AptInfo와 AptTrade를 조s인하여 필요한 데이터를 가져옴
     results = db.session.query(AptInfo.apt_name, AptTrade.apt_sq) \
@@ -153,6 +153,22 @@ def web_get_name_sq():
     # JSON으로 결과 반환
     return jsonify({"name_and_sq": name_sq_list})
 
+# 모든 아파트의 이름을 반환하는 API
+@app.route('/get/all-name', methods=['GET'])
+def web_get_name():
+
+    results = db.session.query(AptInfo.apt_name).all()
+
+    # 결과 데이터를 JSON 형식으로 변환
+    name_sq_list = [
+        {
+            "apt_name": result.apt_name,
+        }
+        for result in results
+    ]
+
+    # JSON으로 결과 반환
+    return jsonify(name_sq_list)
 
 @app.route('/get_answers', methods=['POST'])
 def get_answers():
