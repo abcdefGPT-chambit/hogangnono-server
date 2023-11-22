@@ -177,7 +177,13 @@ def get_answers():
         ]
     )
 
-    return jsonify({'message': response.choices[0].message.content})
+    # 답변을 JSON 형식으로 구성
+    qna_pairs = [
+        {"answer": response.choices[0].message.content}
+    ]
+
+    # JSON으로 변환하여 반환
+    return jsonify(qna_pairs)
 
 
 def search_apartments(search_str):
