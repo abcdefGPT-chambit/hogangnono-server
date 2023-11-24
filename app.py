@@ -187,7 +187,7 @@ async def get_answers(request: Request):
     provided_string = data['message']
 
     # OpenAI GPT-4를 호출하는 비동기 함수를 정의합니다.
-    async with httpx.AsyncClient(timeout=60.0) as client:
+    async with httpx.AsyncClient(timeout=90.0) as client:
         response = await client.post(
             "https://api.openai.com/v1/chat/completions",
             headers={
