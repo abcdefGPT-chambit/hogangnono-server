@@ -214,7 +214,7 @@ async def get_answers(request: Request):
 #     # 아파트 검색 로직 비동기 구현 필요
 #     ...
 
-# # 로드밸런서의 테스트를 위한 기본 응답
-# @app.get("/")
-# async def initial_request():
-#     return {"success": "initial request"}
+# 로드밸런서의 테스트를 위한 기본 응답
+@app.get("/")
+async def initial_request():
+    return {"success": "initial request"}
