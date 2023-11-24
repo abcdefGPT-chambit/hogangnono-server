@@ -1,4 +1,4 @@
-# 실행방법: uvicorn fast_api:app --reload
+# 실행방법: uvicorn fast_api:app --reload --host 127.0.0.1 --port 5000
 import asyncio
 
 from fastapi import FastAPI, HTTPException, Request, Depends, status
