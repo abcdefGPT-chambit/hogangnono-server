@@ -1,16 +1,18 @@
 # 실행방법: uvicorn fast_api:app --reload
-from fastapi import FastAPI, HTTPException, Request, Depends
-from fastapi.responses import JSONResponse
+import asyncio
+
+from fastapi import FastAPI, HTTPException, Request, Depends, status
+from fastapi.encoders import jsonable_encoder
 from fastapi.middleware.cors import CORSMiddleware
 import pandas as pd
-from sqlalchemy.future import select
-from db_models import db, AptReview, AptTrade, AptInfo
+from db_models import AptReview, AptTrade, AptInfo
 from config import config
-import openai
-from sqlalchemy import case, func
+from sqlalchemy import case, func, select
 from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession
 from sqlalchemy.orm import sessionmaker
+from sqlalchemy.orm import selectinload
 import httpx
+import sys
 
 # GPT API 설정
 import constants
@@ -207,14 +209,39 @@ async def get_answers(request: Request):
     qna_pairs = [{"answer": ans["message"]["content"]} for ans in response.json()["choices"]]
 
     return qna_pairs
-#
-# @app.post("/search")
-# async def search_apt(request: Request):
-#     data = await request.json()
-#     # 아파트 검색 로직 비동기 구현 필요
-#     ...
+
+
+@app.post("/search")
+async def search_apt(request: Request, db: AsyncSession = Depends(get_db)):
+    data = await request.json()
+    if not data or 'message' not in data:
+        raise HTTPException(status_code=400, detail="No 'message' provided in request.")
+
+    provided_string = data['message']
+
+    if len(provided_string) == 1:
+        result = await db.execute(select(AptInfo).filter(AptInfo.apt_name.like(f"%{provided_string}%")))
+    else:
+        case_statements = [case((AptInfo.apt_name.like(f'%{char}%'), 1), else_=0) for char in provided_string]
+
+        score_column = func.coalesce(sum(case_statements), 0).label('score')
+        query = select(AptInfo, score_column).filter(score_column > 0).order_by(score_column.desc())
+        result = await db.execute(query)
+
+    apartments = result.all()
+    apartment_list = [
+        {"apt_code": apt[0].apt_code, "apt_name": apt[0].apt_name}
+        for apt in apartments
+    ]
+
+    return apartment_list
 
 # 로드밸런서의 테스트를 위한 기본 응답
 @app.get("/")
 async def initial_request():
     return {"success": "initial request"}
+
+if __name__ == '__main__':
+  py_ver = int(f"{sys.version_info.major}{sys.version_info.minor}")
+  if py_ver > 37 and sys.platform.startswith('win'):
+  	asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
