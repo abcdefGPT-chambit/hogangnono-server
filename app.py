@@ -1,4 +1,4 @@
-# 실행방법: uvicorn fast_api:app --reload --host 127.0.0.1 --port 5000
+# 실행방법: uvicorn app:app --reload --host 127.0.0.1 --port 5000
 import asyncio
 
 from fastapi import FastAPI, HTTPException, Request, Depends, status
@@ -96,6 +96,7 @@ async def web_insertdata():
         review_files = [
             'database/dataset/apt_review/1_Gracium_Label.csv',
             'database/dataset/apt_review/2_Heliocity_Label.csv',
+            'database/dataset/apt_review/3_Mapo_raemian_pruzio_Label.csv',
             'database/dataset/apt_review/4_Banpo_raemian_firstage_Label.csv',
             'database/dataset/apt_review/5_Dogok_rexle_Label.csv',
             'database/dataset/apt_review/6_recents_Label.csv',
