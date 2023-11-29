@@ -161,21 +161,26 @@ async def web_get_name_sq(db: AsyncSession = Depends(get_db)):
         {
             "apt_name": apt_name,
             "apt_sq": f"{apt_sq}㎡"
-        }
-        for apt_name, apt_sq in results
+        } for apt_name, apt_sq in results
     ]
 
     return {"name_and_sq": name_sq_list}
 
 
-@app.get("/get/all-name")
+@app.get("/get/all-name-code")
 async def web_get_name(db: AsyncSession = Depends(get_db)):
-    result = await db.execute(select(AptInfo.apt_name))
-    results = result.scalars().all()
+    result = await db.execute(
+        select(AptInfo.apt_name, AptInfo.apt_code))
+    results = result.all()
 
-    name_list = [{"apt_name": name} for name in results]
+    name_code_list = [
+        {
+            "apt_name": apt_name,
+            "apt_code": apt_code
+        } for apt_name, apt_code in results
+    ]
 
-    return name_list
+    return {"name_and_code": name_code_list}
 
 
 @app.post("/get_answers")
